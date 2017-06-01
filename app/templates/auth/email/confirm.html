@@ -1,0 +1,8 @@
+<p>亲爱的 {{ user.username }}，</p>
+<p>欢迎注册<b>Myblog。</b></p>
+<p>为了验证您的邮箱，<a href="{{ url_for('auth.confirm' token=token _external=True) }}">请点击这里</a> 。</p>
+<p>您也可以将下面的地址复制到您的浏览器打开：</p>
+<p>{{ url_for('auth.confirm' token=token _external=True) }}</p>
+<p>祝您愉快！</p>
+<p>Myblog 王宇辉</p>
+<p><small>友情提示：请勿直接回复此邮箱。</small></p>

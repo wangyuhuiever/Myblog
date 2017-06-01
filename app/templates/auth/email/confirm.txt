@@ -1,0 +1,7 @@
+亲爱的 {{ user.username }}，
+欢迎注册Myblog。
+为了验证您的邮箱，请点击下面的链接
+{{ url_for('auth.confirm' token=token, _external=True) }}
+祝您愉快！
+Myblog 王宇辉
+友情提示：请勿直接回复此邮箱。
