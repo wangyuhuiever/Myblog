@@ -25,3 +25,32 @@ class LoginForm(FlaskForm):
     password = PasswordField("密码", validators=[Required()])
     remember_me = BooleanField("记住我")
     submit = SubmitField("登录")
+
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField("原密码", validators=[Required()])
+    password = PasswordField("新密码", validators=[Required()])
+    password2 = PasswordField("确认密码", validators=[Required(), EqualTo("password","必须与新密码一致")])
+    submit = SubmitField("确认")
+
+class PasswordResetRequestForm(FlaskForm):
+    email = StringField("邮箱", validators=[Required(), Length(1, 64), Email()])
+    submit = SubmitField("确认")
+
+class PasswordResetForm(FlaskForm):
+    email = StringField("邮箱", validators=[Required(), Length(1, 64), Email()])
+    password = PasswordField("密码", validators=[Required()])
+    password2 = PasswordField("确认密码", validators=[Required(), EqualTo('password', message="两次密码必须一致")])
+    submit = SubmitField("确认")
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first() is None:
+            raise ValidationError('当前邮箱未注册')
+
+class ChangeEmailForm(FlaskForm):
+    email = StringField("新邮箱", validators=[Required(), Length(1, 64), Email()])
+    password = PasswordField("密码", validators=[Required()])
+    submit = SubmitField("确认")
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first():
+            raise ValidationError('该邮箱已经被注册')
