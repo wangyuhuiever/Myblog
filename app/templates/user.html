@@ -9,7 +9,7 @@
     {% if user.name or user.location %}
     <p>
         {% if user.name %}{{ user.name }}<br>{% endif %}
-        {% if user.location %}{{ user.location }}{% endif %}
+        {% if user.location %}来自<a href="http://map.baidu.com/?q={{ user.location }}">{{ user.location }}</a>{% endif %}
     </p>
     {% endif %}
     {% if current_user.is_administrator %}
@@ -20,5 +20,12 @@
         注册日期：{{ moment(user.member_since).format('L') }}，
         上次登录：{{ moment(user.last_seen).fromNow() }}。
     </p>
+    <p>
+        {% if user == current_user %}
+        <a class="btn btn-default" href="{{ url_for('main.edit_profile') }}">编辑页面</a>
+        {% endif %}
+        {% if current_user.is_administrator %}
+        <a class="btn btn-danger" href="{{ url_for('main.edit_profile_admin', id=user.id) }}">编辑页面（管理员）</a>
+        {% endif %}
 </div>
 {% endblock %}
