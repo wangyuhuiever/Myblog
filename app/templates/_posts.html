@@ -28,7 +28,7 @@
                 <a href="{{ url_for('.edit', id=post.id) }}">
                     <span class="label label-primary">编辑文章</span>
                 </a>
-                {% elif current_user.is_administrator %}
+                {% elif current_user.is_administrator() %}
                 <a href="{{ url_for('.edit', id=post.id) }}">
                     <span class="label label-danger">编辑文章（管理员）</span>
                 </a>

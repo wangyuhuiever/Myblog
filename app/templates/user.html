@@ -14,7 +14,7 @@
             {% if user.location %}来自<a href="http://map.baidu.com/?q={{ user.location }}">{{ user.location }}</a>{% endif %}
         </p>
         {% endif %}
-        {% if current_user.is_administrator %}
+        {% if current_user.is_administrator() %}
         <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
         {% endif %}
         {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
@@ -44,7 +44,7 @@
             {% if user == current_user %}
             <a class="btn btn-default" href="{{ url_for('main.edit_profile') }}">编辑页面</a>
             {% endif %}
-            {% if current_user.is_administrator %}
+            {% if current_user.is_administrator() %}
             <a class="btn btn-danger" href="{{ url_for('main.edit_profile_admin', id=user.id) }}">编辑页面（管理员）</a>
             {% endif %}
     </div>
