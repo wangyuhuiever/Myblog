@@ -5,6 +5,8 @@ from flask import current_app, request
 from flask_login import UserMixin, AnonymousUserMixin
 from datetime import datetime
 import hashlib
+from markdown import markdown
+import bleach
 
 class User(UserMixin,db.Model):
     __tablename__='users'
@@ -183,6 +185,24 @@ class Role(db.Model):
             db.session.add(role)
         db.session.commit()
 
+    def __repr__(self):
+        return '<Role %r>' % self.name
+
+class Permission:
+    FOLLOW = 0x01
+    COMMENT = 0x02
+    WRITE_ARTICLES = 0x04
+    MODERATE_COMMENTS = 0x08
+    ADMINISTER = 0x80
+
+class Post(db.Model):
+    __tablename__ = 'posts'
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    body_html = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
     @staticmethod
     def generate_fake(count=100):
         from random import seed, randint
@@ -198,19 +218,13 @@ class Role(db.Model):
             db.session.add(p)
             db.session.commit()
 
-    def __repr__(self):
-        return '<Role %r>' % self.name
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                     'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                      'h1', 'h2', 'h3', 'p']
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allow_tags, strip=True))
 
-class Permission:
-    FOLLOW = 0x01
-    COMMENT = 0x02
-    WRITE_ARTICLES = 0x04
-    MODERATE_COMMENTS = 0x08
-    ADMINISTER = 0x80
-
-class Post(db.Model):
-    __tablename__ = 'posts'
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+db.event.listen(Post.body, 'set', Post.on_changed_body)
