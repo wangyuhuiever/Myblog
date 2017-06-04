@@ -14,6 +14,7 @@ class Config:
     MYBLOG_MAIL_SUBJECT_PREFIX = '[MYBLOG]'
     MYBLOG_MAIL_SENDER = ('王宇辉', 'wangyuhuiever@163.com')
     MYBLOG_ADMIN = '729265425@qq.com'
+    MYBLOG_POSTS_PER_PAGE = 20
 
     @staticmethod
     def init_app(app):
