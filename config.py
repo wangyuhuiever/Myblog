@@ -16,6 +16,7 @@ class Config:
     MYBLOG_ADMIN = '729265425@qq.com'
     MYBLOG_POSTS_PER_PAGE = 20
     MYBLOG_FOLLOWERS_PER_PAGE = 20
+    MYBLOG_COMMENTS_PER_PAGE = 20
 
     @staticmethod
     def init_app(app):
